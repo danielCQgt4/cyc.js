@@ -133,15 +133,22 @@ class CyC {
             }({
                 id: 'gen-se-gen'
             });
-        t.type ?
-            (t.c = 'success', t.title
-                || (t.title = 'Exito'), t.text
-                || (t.text = 'La tarea fue completada'), t.btn
-                || (t.btn = 'Ok'))
-            : (t.c = 'error', t.title
-                || (t.title = 'Error'), t.text
-                || (t.text = 'Ocurrio un problema'), t.btn
-                || (t.btn = 'Ok'));
+        typeof t.type == 'number' ?
+            (t.type ?
+                (t.c = 'success', t.title
+                    || (t.title = 'Exito'), t.text
+                    || (t.text = 'La tarea fue completada'), t.btn
+                    || (t.btn = 'Ok'))
+                : (t.c = 'error', t.title
+                    || (t.title = 'Error'), t.text
+                    || (t.text = 'Ocurrio un problema'), t.btn
+                    || (t.btn = 'Ok'))
+            ) : (t.c = 'confirm', t.title
+                || (t.title = '¿Esta segur@?'), t.text
+                || (t.text = 'Que desea continuar con esta operacion. Esto puede provocar problemas en un futuro'), t.btn
+                || (t.btn1 = 'Ok')
+                || (t.btn2 = 'Cancelar'));
+
         const c = gI('body'),
             s = ndom();
         s.setAttribute('class', 'diag-' + t.c),
@@ -152,14 +159,21 @@ class CyC {
         o.setAttribute('class', 'diag-' + t.c + '-top-inner'),
             d.appendChild(o);
         const a = ndom();
-        a.setAttribute('class', 'diag-' + t.c + '-check'),
-            o.appendChild(a);
         const r = ndom();
-        r.setAttribute('class', 'diag-' + t.c + '-check-ltb'),
-            a.appendChild(r);
         const l = ndom();
-        l.setAttribute('class', 'diag-' + t.c + '-chech-lbt'),
-            a.appendChild(l);
+        console.log(t.type);
+        typeof t.type == 'number' ? (
+            a.setAttribute('class', 'diag-' + t.c + '-check'),
+            o.appendChild(a),
+            r.setAttribute('class', 'diag-' + t.c + '-check-ltb'),
+            a.appendChild(r),
+            l.setAttribute('class', 'diag-' + t.c + '-chech-lbt'),
+            a.appendChild(l))
+            : (
+                a.setAttribute('class', 'diag-' + t.c + '-x'),
+                a.appendChild(ntn('?')),
+                o.appendChild(a)
+            );
         const p = ndom();
         p.setAttribute('class', 'diag-' + t.c + '-center');
         const b = ndom('span');
@@ -173,7 +187,9 @@ class CyC {
         const g = ndom();
         g.setAttribute('class', 'diag-' + t.c + '-bottom');
         const m = ndom('button');
-        return m.setAttribute('class', 'diag-' + t.c + '-btn'),
+        const m2 = ndom('button');
+        typeof t.type == 'number' ? (
+            m.setAttribute('class', 'diag-' + t.c + '-btn'),
             m.appendChild(ntn(t.btn || 'Ok')),
             m.addEventListener('click', () => {
                 e && 'function' == typeof e ? e() : z.setAttribute('class', 'diag-container-close'),
@@ -185,13 +201,38 @@ class CyC {
                             }, 400)
                     }, 500)
             }),
-            g.appendChild(m),
-            s.appendChild(d),
+            g.appendChild(m)) :
+            (
+                m.setAttribute('class', 'diag-' + t.c + '-error-btn'),
+                m.appendChild(ntn(t.btn2 || 'Cancelar')),
+                m.addEventListener('click', () => {
+                    e && 'function' == typeof e ? e(false) : z.setAttribute('class', 'diag-container-close'),
+                        setTimeout(() => {
+                            rmM(z.id),
+                                n.setAttribute('class', 'diag-back-close'),
+                                setTimeout(() => {
+                                    rmM(n.id)
+                                }, 400)
+                        }, 500)
+                }),
+                g.appendChild(m),
+
+                m2.setAttribute('class', 'diag-' + t.c + '-success-btn'),
+                m2.appendChild(ntn(t.btn1 || 'Ok')),
+                m2.addEventListener('click', () => {
+                    if (e && 'function' == typeof e) {
+                        e(true);   
+                    }
+                }),
+                g.appendChild(m2)
+            )
+        s.appendChild(d),
             s.appendChild(p),
             s.appendChild(g),
-            c.appendChild(n),
-        {
+            c.appendChild(n);
+        return {
             n,
+            g,
             rm: function () {
                 z.setAttribute('class', 'diag-container-close'),
                     setTimeout(() => {
@@ -279,7 +320,7 @@ class CyC {
     }
     diagS(e, n) {
         if (null == e) (e = {
-        }).type = !0,
+        }).type = 1,
             e.c = 'success',
             e.title = 'Exito',
             e.text = 'La tarea fue completada',
@@ -293,8 +334,30 @@ class CyC {
             };
             e = t
         } else 'object' != typeof e && ((e = {
-        }).type = !0, e.c = 'success', e.title = 'Exito', e.text = 'La tarea fue completada', e.btn = 'Ok');
-        return e.type = !0,
+        }).type = 1, e.c = 'success', e.title = 'Exito', e.text = 'La tarea fue completada', e.btn = 'Ok');
+        return e.type = 1,
+            this.g2(e, n)
+    }
+    diagC(e, n) {
+        if (null == e) (e = {
+        }).type = false,
+            e.c = 'confirm',
+            e.title = '¿Esta segur@?',
+            e.text = 'Que desea continuar con esta operacion. Esto puede provocar problemas en un futuro',
+            e.btn1 = 'Ok',
+            e.btn2 = 'Cancelar';
+        else if ('string' == typeof e) {
+            const t = {
+                c: 'confirm',
+                title: '¿Esta segur@?',
+                text: e,
+                btn1: 'Ok',
+                btn2: 'Cancelar'
+            };
+            e = t
+        } else 'object' != typeof e && ((e = {
+        }).type = false, e.c = 'confirm', e.title = '¿Esta segur@?', e.text = 'Que desea continuar con esta operacion. Esto puede provocar problemas en un futuro', e.btn1 = 'Ok', e.btn2 = 'Cancelar');
+        return e.type = false,
             this.g2(e, n)
     }
     iF(e) {

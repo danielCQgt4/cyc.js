@@ -790,7 +790,7 @@
 }
 
 .diag-confirm-center-title {
-  font-size: 35px;
+  font-size: 32px;
   color: #666;
   text-align: center;
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
@@ -798,7 +798,7 @@
 }
 
 .diag-confirm-center-msg {
-  margin-top: 5px;
+  margin-top: 15px;
   color: #606060;
   font-size: 15px;
   padding: 1rem !important;
