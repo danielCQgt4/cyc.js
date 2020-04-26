@@ -496,7 +496,7 @@ const cyc = {};
         /*
         * Other
         */
-        vld = function () {
+        vld() {
             var data;
             var arr = [];
             for (var i = 0, l = arguments.length; i < l; i++) {
@@ -524,7 +524,7 @@ const cyc = {};
                 array: arr
             };
         }
-        resetFields = function () {
+        resetFields() {
             var data;
             for (var i = 0, l = arguments.length; i < l; i++) {
                 data = arguments[i];
@@ -535,7 +535,7 @@ const cyc = {};
                 }
             }
         }
-        readOnly = function () {
+        readOnly() {
             for (var i = 0, l = arguments.length; i < l; i++) {
                 arguments[i].setAttribute('readonly', 'true');
             }
@@ -577,7 +577,7 @@ const cyc = {};
             f.forEach(obj => {
                 keys = Object.keys(obj);
                 for (let i = 0; i < keys.length; i++) {
-                    console.log(add, String(obj[keys[i]]).toLocaleLowerCase(),String(v).toLocaleLowerCase());
+                    console.log(add, String(obj[keys[i]]).toLocaleLowerCase(), String(v).toLocaleLowerCase());
                     if (!add && String(obj[keys[i]]).toLocaleLowerCase().includes(String(v).toLocaleLowerCase())) {
                         add = true;
                         arr.push(obj);
@@ -595,42 +595,3 @@ const cyc = {};
 const app = {
     o: cyc.o
 }
-
-const d = {
-    title: 'foo',
-    body: 'bar',
-    userId: 1,
-    other: true
-};
-const d2 = {
-    id: 1,
-    title: 'foo',
-    body: 'bar',
-    userId: 1,
-    other: true
-};
-const d3 = {
-
-};
-const w = app.o.diagW();
-app.o.deleteJson('https://jsonplaceholder.typicode.com/posts/1', d, json => {
-    w.rm();
-    if (json) {
-        console.log(json);
-    } else {
-        app.o.diagE();
-    }
-});
-
-const ar = [{
-    id: 1,
-    nombre: 'Daniel Coto',
-    titulo: 'js'
-}, {
-    id: 2,
-    nombre: 'Melissa Benoist',
-    titulo: 'SuperGirl'
-}];
-
-const r = app.o.filter(ar, 'me');
-console.log(r);
