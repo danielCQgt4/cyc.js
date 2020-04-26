@@ -1,4 +1,4 @@
-const r = (c) => {
+const r = function (c) {
     if (c && (typeof c === 'object')) {
         const a = window.location.pathname;
         var e = gN(c.n);
@@ -12,7 +12,7 @@ const r = (c) => {
         console.error("Not valid obj");
     }
 }
-const rmM = (t, a) => {
+const rmM = function (t, a) {
     if (gI(t) && t) {
         var e = gI(t);
         if (typeof a == 'boolean' && a) {
@@ -25,11 +25,11 @@ const rmM = (t, a) => {
         }
     }
 }
-const nI = (t) => {
+const nI = function (t) {
     const e = ndom("img");
     return t && "object" == typeof t && Object.assign(e, t), e;
 }
-const ndom = (t, l) => {
+const ndom = function (t, l) {
     if (typeof t == 'number') {
         for (let i = 0; i < l; i++) {
             const e = document.createElement('div');
@@ -66,29 +66,101 @@ const gI = (t) => {
 const gN = (t) => {
     return t || console.error("Not name gotted"), document.getElementsByName(t);
 };
-class CyC {
-    constructor() {
+const cyc = {};
+(() => {
 
+    const p = (c, cb) => {
+        const ajx = new XMLHttpRequest();
+        ajx.open(c.method, c.u, true),
+            c.headers.forEach(h => {
+                ajx.setRequestHeader(h.t, h.d);
+            }),
+            ajx.timeout = 3500,
+            ajx.onreadystatechange = function () {
+                if (4 == this.readyState) {
+                    cb(this.responseText, this.status);
+                }
+            },
+            ajx.onerror = () => {
+                console.log('Error');
+                cb(null);
+            },
+            ajx.send(c.d);
     }
-    tog(t, e) {
-        if ((null == e && (e = 1), "none" != t.style.display))
-            var i = 100,
-                r = setInterval(() => {
-                    i >= 0
-                        ? ((t.style.opacity = i / 100), (i -= 1))
-                        : ((t.style.display = "none"), clearInterval(r));
-                }, e);
-        else {
-            i = 0;
-            (t.style.opacity = 0), (t.style.display = "block");
-            r = setInterval(() => {
-                i <= 100
-                    ? ((t.style.opacity = i / 100), (i += 1))
-                    : ((t.style.display = "block"), clearInterval(r));
-            }, e);
+
+    const ajxJson = (m, u, d, cb, h) => {
+        const post = {
+            method: m,
+            u,
+            d: typeof d != 'string' ? JSON.stringify(d) : d,
+            headers: [
+                {
+                    t: 'Content-type',
+                    d: 'application/json'
+                }
+            ]
+        };
+        if (h) {
+            h.forEach(o => {
+                post.headers.push(o);
+            });
         }
+        p(post, o => {
+            try {
+                o = JSON.parse(o);
+                cb(o);
+            } catch (e) {
+                cb(o);
+            }
+        });
     }
-    g1(t) {
+
+    const ajxForm = (m, u, d, cb, h) => {
+        if (typeof d == 'object') {
+            d = jF(d);
+        }
+        const post = {
+            method: m,
+            u,
+            d,
+            headers: [
+                {
+                    t: 'Content-type',
+                    d: 'application/x-www-form-urlencoded'
+                }
+            ]
+        };
+        if (h) {
+            h.forEach(o => {
+                post.headers.push(o);
+            });
+        }
+        p(post, o => {
+            try {
+                o = JSON.parse(o);
+                cb(o);
+            } catch (e) {
+                cb(o);
+            }
+        });
+    }
+
+    const jF = (j) => {
+        var r = '';
+        if (typeof j == 'object') {
+            var k = Object.keys(j);
+            var l = k.length;
+            for (var i = 0; i < l; i++) {
+                r += k[i] + '=' + j[k[i]];
+                if (i < (l - 1)) {
+                    r += '&';
+                }
+            }
+        }
+        return r;
+    }
+
+    const g1 = (t) => {
         const d = ndom();
         d.setAttribute('id', t.id || 'diag-gen'),
             d.setAttribute('class', 'diag-back');
@@ -105,7 +177,7 @@ class CyC {
             dc: i
         }
     }
-    g2(t, e) {
+    const g2 = (t, e) => {
         null == t && (t = {
             type: !0
         });
@@ -161,7 +233,6 @@ class CyC {
         const a = ndom();
         const r = ndom();
         const l = ndom();
-        console.log(t.type);
         typeof t.type == 'number' ? (
             a.setAttribute('class', 'diag-' + t.c + '-check'),
             o.appendChild(a),
@@ -221,7 +292,7 @@ class CyC {
                 m2.appendChild(ntn(t.btn1 || 'Ok')),
                 m2.addEventListener('click', () => {
                     if (e && 'function' == typeof e) {
-                        e(true);   
+                        e(true);
                     }
                 }),
                 g.appendChild(m2)
@@ -245,128 +316,244 @@ class CyC {
             }
         }
     }
-    diagW(t) {
-        null == t && (t = 'Un momento');
-        const { db: d, dbo: i, dc: e } = this.g1({
-            id: 'diag-wait'
-        }),
-            n = gI('body'),
-            s = ndom();
-        //Simplify
-        s.setAttribute('class', 'diag-wait'),
-            i.appendChild(s);
-        const a = ndom();
-        a.setAttribute('class', 'diag-wait-top');
-        const o = ndom();
-        o.setAttribute('class', 'diag-wait-top-inner'),
-            a.appendChild(o);
-        const c = ndom();
-        c.setAttribute('class', 'diag-wait-x'),
-            o.appendChild(c);
-        const l = ndom();
-        l.setAttribute('class', 'diag-wait-check-ltb'),
-            c.appendChild(l);
-        const p = ndom();
-        p.setAttribute('class', 'diag-wait-chech-lbt'),
-            c.appendChild(p);
-        const r = ndom();
-        r.setAttribute('class', 'diag-wait-center');
-        const b = ndom('span');
-        b.setAttribute('class', 'diag-wait-center-title'),
-            b.appendChild(ntn(t || 'Un momento')),
-            r.appendChild(b);
-        const u = ndom();
-        u.setAttribute('class', 'diag-wait-bottom');
-        const m = ndom();
-        return m.setAttribute('class', 'load-pg load-pg-primary'),
-            u.appendChild(m),
-            s.appendChild(a),
-            s.appendChild(r),
-            s.appendChild(u),
-            n.appendChild(d),
-        {
-            db: d,
-            rm: function () {
-                e.setAttribute('class', 'diag-container-2-close'),
-                    setTimeout(() => {
-                        rmM(e.id),
-                            d.setAttribute('class', 'diag-back-close'),
-                            setTimeout(() => {
-                                rmM(d.id)
-                            }, 400)
-                    }, 500)
+
+    class CyC {
+        /*
+        * Modals
+        */
+        diagW(t) {
+            null == t && (t = 'Un momento');
+            const { db: d, dbo: i, dc: e } = g1({
+                id: 'diag-wait'
+            }),
+                n = gI('body'),
+                s = ndom();
+            //Simplify
+            s.setAttribute('class', 'diag-wait'),
+                i.appendChild(s);
+            const a = ndom();
+            a.setAttribute('class', 'diag-wait-top');
+            const o = ndom();
+            o.setAttribute('class', 'diag-wait-top-inner'),
+                a.appendChild(o);
+            const c = ndom();
+            c.setAttribute('class', 'diag-wait-x'),
+                o.appendChild(c);
+            const l = ndom();
+            l.setAttribute('class', 'diag-wait-check-ltb'),
+                c.appendChild(l);
+            const p = ndom();
+            p.setAttribute('class', 'diag-wait-chech-lbt'),
+                c.appendChild(p);
+            const r = ndom();
+            r.setAttribute('class', 'diag-wait-center');
+            const b = ndom('span');
+            b.setAttribute('class', 'diag-wait-center-title'),
+                b.appendChild(ntn(t || 'Un momento')),
+                r.appendChild(b);
+            const u = ndom();
+            u.setAttribute('class', 'diag-wait-bottom');
+            const m = ndom();
+            return m.setAttribute('class', 'load-pg load-pg-primary'),
+                u.appendChild(m),
+                s.appendChild(a),
+                s.appendChild(r),
+                s.appendChild(u),
+                n.appendChild(d),
+            {
+                db: d,
+                rm: function () {
+                    e.setAttribute('class', 'diag-container-2-close'),
+                        setTimeout(() => {
+                            rmM(e.id),
+                                d.setAttribute('class', 'diag-back-close'),
+                                setTimeout(() => {
+                                    rmM(d.id)
+                                }, 400)
+                        }, 500)
+                }
             }
         }
-    }
-    diagE(e, n) {
-        if (null == e) (e = {
-        }).type = 0,
-            e.c = 'error',
-            e.title = 'Error',
-            e.text = 'Ocurrio un problema',
-            e.btn = 'Ok';
-        else if ('string' == typeof e) {
-            const t = {
-                c: 'error',
-                title: 'Error',
-                text: e,
-                btn: 'Ok'
-            };
-            e = t
-        } else 'object' != typeof e && ((e = {
-        }).c = 'error', e.title = 'Error', e.text = 'Ocurrio problema', e.btn = 'Ok');
-        return e.type = 0,
-            this.g2(e, n)
-    }
-    diagS(e, n) {
-        if (null == e) (e = {
-        }).type = 1,
-            e.c = 'success',
-            e.title = 'Exito',
-            e.text = 'La tarea fue completada',
-            e.btn = 'Ok';
-        else if ('string' == typeof e) {
-            const t = {
-                c: 'success',
-                title: 'Exito',
-                text: e,
-                btn: 'Ok'
-            };
-            e = t
-        } else 'object' != typeof e && ((e = {
-        }).type = 1, e.c = 'success', e.title = 'Exito', e.text = 'La tarea fue completada', e.btn = 'Ok');
-        return e.type = 1,
-            this.g2(e, n)
-    }
-    diagC(e, n) {
-        if (null == e) (e = {
-        }).type = false,
-            e.c = 'confirm',
-            e.title = '¿Esta segur@?',
-            e.text = 'Que desea continuar con esta operacion. Esto puede provocar problemas en un futuro',
-            e.btn1 = 'Ok',
-            e.btn2 = 'Cancelar';
-        else if ('string' == typeof e) {
-            const t = {
-                c: 'confirm',
-                title: '¿Esta segur@?',
-                text: e,
-                btn1: 'Ok',
-                btn2: 'Cancelar'
-            };
-            e = t
-        } else 'object' != typeof e && ((e = {
-        }).type = false, e.c = 'confirm', e.title = '¿Esta segur@?', e.text = 'Que desea continuar con esta operacion. Esto puede provocar problemas en un futuro', e.btn1 = 'Ok', e.btn2 = 'Cancelar');
-        return e.type = false,
-            this.g2(e, n)
-    }
-    iF(e) {
-        for (var i = 0, l = arguments.length; i < l; i++) {
-            arguments[i].style = e ? "border: 1px solid #ff0000;" : "";
+        diagE(e, n) {
+            if (null == e) (e = {
+            }).type = 0,
+                e.c = 'error',
+                e.title = 'Error',
+                e.text = 'Ocurrio un problema',
+                e.btn = 'Ok';
+            else if ('string' == typeof e) {
+                const t = {
+                    c: 'error',
+                    title: 'Error',
+                    text: e,
+                    btn: 'Ok'
+                };
+                e = t
+            } else 'object' != typeof e && ((e = {
+            }).c = 'error', e.title = 'Error', e.text = 'Ocurrio problema', e.btn = 'Ok');
+            return e.type = 0,
+                g2(e, n)
         }
-    }
-}
+        diagS(e, n) {
+            if (null == e) (e = {
+            }).type = 1,
+                e.c = 'success',
+                e.title = 'Exito',
+                e.text = 'La tarea fue completada',
+                e.btn = 'Ok';
+            else if ('string' == typeof e) {
+                const t = {
+                    c: 'success',
+                    title: 'Exito',
+                    text: e,
+                    btn: 'Ok'
+                };
+                e = t
+            } else 'object' != typeof e && ((e = {
+            }).type = 1, e.c = 'success', e.title = 'Exito', e.text = 'La tarea fue completada', e.btn = 'Ok');
+            return e.type = 1,
+                g2(e, n)
+        }
+        diagC(e, n) {
+            if (null == e) (e = {
+            }).type = false,
+                e.c = 'confirm',
+                e.title = '¿Esta segur@?',
+                e.text = 'Que desea continuar con esta operacion. Esto puede provocar problemas en un futuro',
+                e.btn1 = 'Ok',
+                e.btn2 = 'Cancelar';
+            else if ('string' == typeof e) {
+                const t = {
+                    c: 'confirm',
+                    title: '¿Esta segur@?',
+                    text: e,
+                    btn1: 'Ok',
+                    btn2: 'Cancelar'
+                };
+                e = t
+            } else 'object' != typeof e && ((e = {
+            }).type = false, e.c = 'confirm', e.title = '¿Esta segur@?', e.text = 'Que desea continuar con esta operacion. Esto puede provocar problemas en un futuro', e.btn1 = 'Ok', e.btn2 = 'Cancelar');
+            return e.type = false,
+                g2(e, n)
+        }
+        /*
+        * Ajax
+        */
+        postJson(u, d, cb, h) {
+            ajxJson('POST', u, d, cb, h);
+        }
+        postForm(u, d, cb, h) {
+            ajxForm('POST', u, d, cb, h);
+        }
+        putJson(u, d, cb, h) {
+            ajxJson('PUT', u, d, cb, h);
+        }
+        putForm(u, d, cb, h) {
+            ajxForm('PUT', u, d, cb, h);
+        }
+        deleteJson(u, d, cb, h) {
+            ajxJson('DELETE', u, d, cb, h);
+        }
+        deleteForm(u, d, cb, h) {
+            ajxForm('DELETE', u, d, cb, h);
+        }
+        getJson(u, d, cb, h) {
+            ajxJson('GET', u, d, cb, h);
+        }
+        getForm(u, d, cb, h) {
+            ajxForm('GET', u, d, cb, h);
+        }
+        /*
+        * Messages
+        */
+        m(t, e) {
+            var i = ndom("div"),
+                r = ndom("input");
+            return (
+                i.setAttribute("id", "error-msg"),
+                i.setAttribute('class', 'error-msg border-r-8 pt-2 pb-2 pl-1 pr-1 mb w-100'),
+                i.appendChild(ntn(t)),
+                rmM(i.id),
+                r.addEventListener("click", function () {
+                    rmM(i.id);
+                }),
+                r.setAttribute("class", "m-btn"),
+                r.setAttribute("value", "X"),
+                r.setAttribute("type", "button"),
+                i.appendChild(r),
+                e.insertBefore(i, e.childNodes[0]),
+                i
+            );
+        }
+        sM(t, e) {
+            var i = this.m(t, e);
+            return i.setAttribute("class", "s-msg cyc-p-1 cyc-mb"), i;
+        }
+        eM(t, e) {
+            var i = this.m(t, e);
+            return i.setAttribute("class", "error-msg cyc-p-1 cyc-mb"), i;
+        }
+        /*
+        * Other
+        */
+        jsonForm(j) {
+            return jF(j);
+        }
+        tog(t, e) {
+            if ((null == e && (e = 1), "none" != t.style.display))
+                var i = 100,
+                    r = setInterval(() => {
+                        i >= 0
+                            ? ((t.style.opacity = i / 100), (i -= 1))
+                            : ((t.style.display = "none"), clearInterval(r));
+                    }, e);
+            else {
+                i = 0;
+                (t.style.opacity = 0), (t.style.display = "block");
+                r = setInterval(() => {
+                    i <= 100
+                        ? ((t.style.opacity = i / 100), (i += 1))
+                        : ((t.style.display = "block"), clearInterval(r));
+                }, e);
+            }
+        }
+        iF(e) {
+            for (var i = 0, l = arguments.length; i < l; i++) {
+                arguments[i].style = e ? "border: 1px solid #ff0000;" : "";
+            }
+        }
+    };
+    cyc.o = new CyC();
+})();
 
 const app = {
-    o: new CyC()
+    o: cyc.o
 }
+
+const d = {
+    title: 'foo',
+    body: 'bar',
+    userId: 1,
+    other: true
+};
+const d2 = {
+    id: 1,
+    title: 'foo',
+    body: 'bar',
+    userId: 1,
+    other: true
+};
+const d3 = {
+
+};
+const w = app.o.diagW();
+app.o.deleteJson('https://jsonplaceholder.typicode.com/posts/1', d, json => {
+    w.rm();
+    if (json) {
+        console.log(json);
+    } else {
+        app.o.diagE();
+    }
+});
+
+
