@@ -133,7 +133,15 @@ class CyC {
             }({
                 id: 'gen-se-gen'
             });
-        t.type ? (t.c = 'success', t.title || (t.title = 'Exito'), t.text || (t.text = 'La tarea fue completada'), t.btn || (t.btn = 'Ok')) : (t.c = 'error', t.title || (t.title = 'Error'), t.text || (t.text = 'Ocurrio un problema'), t.btn || (t.btn = 'Ok'));
+        t.type ?
+            (t.c = 'success', t.title
+                || (t.title = 'Exito'), t.text
+                || (t.text = 'La tarea fue completada'), t.btn
+                || (t.btn = 'Ok'))
+            : (t.c = 'error', t.title
+                || (t.title = 'Error'), t.text
+                || (t.text = 'Ocurrio un problema'), t.btn
+                || (t.btn = 'Ok'));
         const c = gI('body'),
             s = ndom();
         s.setAttribute('class', 'diag-' + t.c),
