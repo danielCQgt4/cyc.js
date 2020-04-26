@@ -496,6 +496,54 @@ const cyc = {};
         /*
         * Other
         */
+        vld = function () {
+            var data;
+            var arr = [];
+            for (var i = 0, l = arguments.length; i < l; i++) {
+                data = arguments[i];
+                if (data) {
+                    if (typeof data == 'object') {
+                        if (data.id) {
+                            if (!(!!data.value)) {
+                                arr.push(data);
+                            }
+                        }
+                    } else {
+                        if (!(!!data)) {
+                            arr.push(data);
+                        }
+                    }
+                } else {
+                }
+            }
+            if (arr.length == 0) {
+                arr = [];
+            }
+            return {
+                valid: !(arr.length > 0),
+                array: arr
+            };
+        }
+        resetFields = function () {
+            var data;
+            for (var i = 0, l = arguments.length; i < l; i++) {
+                data = arguments[i];
+                if (data) {
+                    if (typeof data == 'object') {
+                        data.value = '';
+                    }
+                }
+            }
+        }
+        readOnly = function () {
+            for (var i = 0, l = arguments.length; i < l; i++) {
+                arguments[i].setAttribute('readonly', 'true');
+            }
+        }
+        isEmail(e) {
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(String(e).toLowerCase());
+        }
         jsonForm(j) {
             return jF(j);
         }
