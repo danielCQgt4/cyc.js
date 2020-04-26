@@ -1,4 +1,4 @@
-const r = function (c) {
+const load = function (c) {
     if (c && (typeof c === 'object')) {
         const a = window.location.pathname;
         var e = gN(c.n);
@@ -570,6 +570,24 @@ const cyc = {};
                 arguments[i].style = e ? "border: 1px solid #ff0000;" : "";
             }
         }
+        filter(f, v) {
+            const arr = [];
+            let add = false;
+            let keys;
+            f.forEach(obj => {
+                keys = Object.keys(obj);
+                for (let i = 0; i < keys.length; i++) {
+                    console.log(add, String(obj[keys[i]]).toLocaleLowerCase(),String(v).toLocaleLowerCase());
+                    if (!add && String(obj[keys[i]]).toLocaleLowerCase().includes(String(v).toLocaleLowerCase())) {
+                        add = true;
+                        arr.push(obj);
+                        break;
+                    }
+                }
+                add = false;
+            });
+            return arr;
+        }
     };
     cyc.o = new CyC();
 })();
@@ -604,4 +622,15 @@ app.o.deleteJson('https://jsonplaceholder.typicode.com/posts/1', d, json => {
     }
 });
 
+const ar = [{
+    id: 1,
+    nombre: 'Daniel Coto',
+    titulo: 'js'
+}, {
+    id: 2,
+    nombre: 'Melissa Benoist',
+    titulo: 'SuperGirl'
+}];
 
+const r = app.o.filter(ar, 'me');
+console.log(r);
