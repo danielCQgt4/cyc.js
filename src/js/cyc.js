@@ -496,7 +496,7 @@ const cyc = {};
         /*
         * Other
         */
-        vld = function () {
+        vld() {
             var data;
             var arr = [];
             for (var i = 0, l = arguments.length; i < l; i++) {
@@ -524,7 +524,7 @@ const cyc = {};
                 array: arr
             };
         }
-        resetFields = function () {
+        resetFields() {
             var data;
             for (var i = 0, l = arguments.length; i < l; i++) {
                 data = arguments[i];
@@ -535,7 +535,7 @@ const cyc = {};
                 }
             }
         }
-        readOnly = function () {
+        readOnly() {
             for (var i = 0, l = arguments.length; i < l; i++) {
                 arguments[i].setAttribute('readonly', 'true');
             }
@@ -577,7 +577,7 @@ const cyc = {};
             f.forEach(obj => {
                 keys = Object.keys(obj);
                 for (let i = 0; i < keys.length; i++) {
-                    console.log(add, String(obj[keys[i]]).toLocaleLowerCase(),String(v).toLocaleLowerCase());
+                    console.log(add, String(obj[keys[i]]).toLocaleLowerCase(), String(v).toLocaleLowerCase());
                     if (!add && String(obj[keys[i]]).toLocaleLowerCase().includes(String(v).toLocaleLowerCase())) {
                         add = true;
                         arr.push(obj);
@@ -595,4 +595,3 @@ const cyc = {};
 const app = {
     o: cyc.o
 }
-
