@@ -29,38 +29,79 @@ const nI = function (t) {
     const e = ndom("img");
     return t && "object" == typeof t && Object.assign(e, t), e;
 }
+var ndomVersion = 1;
 const ndom = function (t, l) {
+    const createElement = (t) => {
+        if (t == 'circle' || t == 'svg') {
+            return document.createElementNS('http://www.w3.org/2000/svg', t);
+        }
+        return document.createElement(t);
+    }
     if (typeof t == 'number') {
         for (let i = 0; i < l; i++) {
-            const e = document.createElement('div');
+            const e = createElement('div');
             arr.push(e);
         }
         return arr;
     } else if (typeof l == 'number') {
         const arr = [];
         for (let i = 0; i < l; i++) {
-            const e = t ? document.createElement(t) : ndom("div");
+            const e = t ? createElement(t) : ndom("div");
             arr.push(e);
         }
         return arr;
     } else if (l && l != undefined && typeof l != 'number') {
-        const arr = [];
-        let m;
-        for (let i = 0; i < arguments.length; i++) {
-            m = arguments[i];
-            const e = typeof m == 'string' ? document.createElement(arguments[i])
-                : document.createElement('div');
-            arr.push(e);
+        if (ndomVersion == 1) {
+            const arr = [];
+            let m;
+            for (let i = 0; i < arguments.length; i++) {
+                m = arguments[i];
+                const e = typeof m == 'string' ? createElement(arguments[i])
+                    : createElement('div');
+                arr.push(e);
+            }
+            return arr;
+        } else if (ndomVersion == 2) {
+            const arr = {};
+            for (let i = 0; i < arguments.length; i++) {
+                const e = typeof arguments[i] == 'string' ? createElement(arguments[i])
+                    : createElement('div');
+                if (arr[arguments[i]]) {
+                    if (Array.isArray(arr[arguments[i]])) {
+                        arr[arguments[i]].push(e);
+                    } else {
+                        arr[arguments[i]] = [arr[arguments[i]]];
+                    }
+                } else {
+                    arr[arguments[i]] = e;
+                }
+            }
+            return arr;
+        } else {
+            console.error('ndomVersion not supported');
+            return null;
         }
-        return arr;
     } else {
-        return t ? document.createElement(t) : ndom("div");
+        return t ? createElement(t) : ndom("div");
     }
 }
 const ntn = (t) => {
     return t || console.error("Not text gotted"), document.createTextNode(t);
 }
-const gI = (t) => {
+const gI = function (t) {
+    if (arguments.length > 1) {
+        const ar = {};
+        for (let i = 0; i < arguments.length; i++) {
+            try {
+                const e = document.getElementById(arguments[i]);
+                ar[arguments[i]] = e;
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+        }
+        return ar;
+    }
     return t || console.error("Not id gotted"), document.getElementById(t);
 }
 const gN = (t) => {
@@ -89,7 +130,7 @@ const cyc = {};
     }
 
     const ajxJson = (m, u, d, cb, h) => {
-        const post = {
+        const c = {
             method: m,
             u,
             d: typeof d != 'string' ? JSON.stringify(d) : d,
@@ -102,10 +143,10 @@ const cyc = {};
         };
         if (h) {
             h.forEach(o => {
-                post.headers.push(o);
+                c.headers.push(o);
             });
         }
-        p(post, o => {
+        p(c, o => {
             try {
                 o = JSON.parse(o);
                 cb(o);
@@ -119,7 +160,7 @@ const cyc = {};
         if (typeof d == 'object') {
             d = jF(d);
         }
-        const post = {
+        const c = {
             method: m,
             u,
             d,
@@ -132,10 +173,37 @@ const cyc = {};
         };
         if (h) {
             h.forEach(o => {
-                post.headers.push(o);
+                c.headers.push(o);
             });
         }
-        p(post, o => {
+        p(c, o => {
+            try {
+                o = JSON.parse(o);
+                cb(o);
+            } catch (e) {
+                cb(o);
+            }
+        });
+    }
+
+    const ajxFormData = (m, u, d, cb, h) => {
+        const formData = new FormData();
+        Object.keys(d).forEach(k => {
+            formData.append(k, d[k]);
+        });
+        const c = {
+            method: m,
+            u,
+            d: formData,
+            headers: [
+            ]
+        };
+        if (h) {
+            h.forEach(o => {
+                c.headers.push(o);
+            });
+        }
+        p(c, o => {
             try {
                 o = JSON.parse(o);
                 cb(o);
@@ -353,8 +421,19 @@ const cyc = {};
                 r.appendChild(b);
             const u = ndom();
             u.setAttribute('class', 'diag-wait-bottom');
-            const m = ndom();
-            return m.setAttribute('class', 'load-pg load-pg-primary'),
+            const m = ndom('svg');
+            m.setAttribute('class', 'wait-main'),
+                m.setAttribute('width', '45'),
+                m.setAttribute('height', '45'),
+                m.setAttribute('viewBox', '0 0 44 44')
+            const mc = ndom('circle');
+            mc.setAttribute('class', 'wait-progress'),
+                mc.setAttribute('cx', '22'),
+                mc.setAttribute('cy', '22'),
+                mc.setAttribute('r', '20'),
+                mc.setAttribute('fill', 'none'),
+                mc.setAttribute('stroke-width', '4');
+            return m.appendChild(mc),
                 u.appendChild(m),
                 s.appendChild(a),
                 s.appendChild(r),
@@ -445,11 +524,17 @@ const cyc = {};
         postForm(u, d, cb, h) {
             ajxForm('POST', u, d, cb, h);
         }
+        postFormData(u, d, cb, h) {
+            ajxFormData('POST', u, d, cb, h);
+        }
         putJson(u, d, cb, h) {
             ajxJson('PUT', u, d, cb, h);
         }
         putForm(u, d, cb, h) {
             ajxForm('PUT', u, d, cb, h);
+        }
+        putFormData(u, d, cb, h) {
+            ajxFormData('PUT', u, d, cb, h);
         }
         deleteJson(u, d, cb, h) {
             ajxJson('DELETE', u, d, cb, h);
@@ -457,11 +542,17 @@ const cyc = {};
         deleteForm(u, d, cb, h) {
             ajxForm('DELETE', u, d, cb, h);
         }
+        deleteFormData(u, d, cb, h) {
+            ajxFormData('DELETE', u, d, cb, h);
+        }
         getJson(u, d, cb, h) {
             ajxJson('GET', u, d, cb, h);
         }
         getForm(u, d, cb, h) {
             ajxForm('GET', u, d, cb, h);
+        }
+        getFormData(u, d, cb, h) {
+            ajxFormData('GET', u, d, cb, h);
         }
         /*
         * Messages
@@ -577,7 +668,6 @@ const cyc = {};
             f.forEach(obj => {
                 keys = Object.keys(obj);
                 for (let i = 0; i < keys.length; i++) {
-                    console.log(add, String(obj[keys[i]]).toLocaleLowerCase(), String(v).toLocaleLowerCase());
                     if (!add && String(obj[keys[i]]).toLocaleLowerCase().includes(String(v).toLocaleLowerCase())) {
                         add = true;
                         arr.push(obj);
