@@ -657,7 +657,7 @@ const cyc = {};
             }
         }
         iF(e) {
-            for (var i = 0, l = arguments.length; i < l; i++) {
+            for (var i = 1, l = arguments.length; i < l; i++) {
                 arguments[i].style = e ? "border: 1px solid #ff0000;" : "";
             }
         }
