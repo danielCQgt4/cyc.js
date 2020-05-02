@@ -1,86 +1,3 @@
-/*
-* Version v1
-*/
-.dialog-back {
-  width: 100%;
-  height: 100%;
-  background-color: #00000033;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.dialog-error-back {
-  width: 100%;
-  height: 100%;
-  background-color: #00000033;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.dialog-error {
-  background-color: #fff;
-  width: 22em;
-  border-radius: 10px;
-  box-shadow: 0px 0px 10px #00000077;
-}
-
-.dialog-error-header {
-  border-top-left-radius: inherit;
-  border-top-right-radius: inherit;
-  background-color: #dc3545;
-  height: 35px;
-}
-
-.dialog-error-msg {
-  padding: 0.5em 1em;
-}
-
-.dialog-error-actions {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.dialog-error-btn-accept {
-  margin-right: 0.5em;
-}
-
-.dialog-confirm-back {
-  width: 100%;
-  height: 100%;
-  background-color: #00000033;
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-
-.dialog-confirm {
-  background-color: #fff;
-  width: 22em;
-  border-radius: 10px;
-  box-shadow: 0px 0px 10px #00000077;
-}
-
-.dialog-confirm-header {
-  border-top-left-radius: inherit;
-  border-top-right-radius: inherit;
-  background-color: #dc3545;
-  height: 35px;
-}
-
-.dialog-confirm-msg {
-  padding: 0.5em 1em;
-}
-
-.dialog-confirm-actions {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.dialog-confirm-btn-accept {
-  margin-right: 0.5em;
-}
 
 .error-msg {
   width: 95%;
@@ -669,6 +586,42 @@
 }
 
 /*-- LOAD --*/
+.wait-main {
+  animation: rotate 3s linear infinite;
+  z-index: 3;
+  margin: 0.5em auto;
+}
+
+.wait-progress {
+  stroke-dasharray: 1, 150;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+  stroke: #3e619b;
+  animation: fillOver 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate {
+  100% {
+      transform: rotate(360deg);
+  }
+}
+
+@keyframes fillOver {
+  0% {
+      stroke-dasharray: 1, 150;
+      stroke-dashoffset: 0;
+  }
+
+  50% {
+      stroke-dasharray: 90, 150;
+      stroke-dashoffset: -35;
+  }
+
+  100% {
+      stroke-dasharray: 90, 150;
+      stroke-dashoffset: -124;
+  }
+}
 
 .load-pg {
   height: 45px;

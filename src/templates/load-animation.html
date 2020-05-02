@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Load</title>
+</head>
+
+<body>
+
+    <style>
+        .wait-main {
+            animation: rotate 4s linear infinite;
+            z-index: 3;
+        }
+
+        .wait-progress {
+            stroke-dasharray: 1, 150;
+            stroke-dashoffset: 0;
+            stroke-linecap: round;
+            stroke: #75787a;
+            animation: fillOver 2s ease-in-out infinite;
+        }
+
+        @keyframes rotate {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fillOver {
+            0% {
+                stroke-dasharray: 1, 150;
+                stroke-dashoffset: 0;
+            }
+
+            50% {
+                stroke-dasharray: 90, 150;
+                stroke-dashoffset: -35;
+            }
+
+            100% {
+                stroke-dasharray: 90, 150;
+                stroke-dashoffset: -124;
+            }
+        }
+
+    </style>
+
+    <svg class="wait-main" width="100" height="100" viewBox="0 0 44 44">
+        <circle class="wait-progress" cx="22" cy="22" r="20" fill="none" stroke-width="4"></circle>
+    </svg>
+
+</body>
+
+</html>
