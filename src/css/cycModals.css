@@ -1,4 +1,3 @@
-
 .error-msg {
   width: 95%;
   background-color: #ef4836;
@@ -586,6 +585,20 @@
 }
 
 /*-- LOAD --*/
+.wait-component-div-p {
+  position: relative;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%);
+  height: auto;
+}
+
+.wait-component-div-ch {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 .wait-main {
   animation: rotate 3s linear infinite;
   z-index: 3;
@@ -602,24 +615,24 @@
 
 @keyframes rotate {
   100% {
-      transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
 @keyframes fillOver {
   0% {
-      stroke-dasharray: 1, 150;
-      stroke-dashoffset: 0;
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
   }
 
   50% {
-      stroke-dasharray: 90, 150;
-      stroke-dashoffset: -35;
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
   }
 
   100% {
-      stroke-dasharray: 90, 150;
-      stroke-dashoffset: -124;
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
   }
 }
 
@@ -699,7 +712,7 @@
   width: 35px;
   width: 35px;
   text-align: center;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   position: absolute;
   top: 50%;
   left: 50%;

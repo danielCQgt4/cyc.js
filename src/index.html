@@ -7,6 +7,7 @@
     <title>CyC FW</title>
     <link rel="stylesheet" href="./css/cycModals.css">
     <link rel="stylesheet" href="./css/cycStyles.css">
+    <link rel="stylesheet" href="https://bootswatch.com/4/flatly/bootstrap.min.css">
 </head>
 
 <body id="body">
@@ -16,9 +17,16 @@
     <div id="div2">b</div>
     <div id="div3">c</div>
     <div id="div4">d</div>
+    <button class="btn btn-success" id="btn">Aceptar</button>
 
     <script src="./js/cyc.js"></script>
 
+    <script>
+        gI('btn').addEventListener('click', () => {
+            const r = app.o.waitComponent('#fff', gI('btn'));
+            setTimeout(r.rm, 1000);
+        });
+    </script>
 </body>
 
 </html>

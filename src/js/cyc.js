@@ -68,9 +68,13 @@ const ndom = function (t, l) {
                     : createElement('div');
                 if (arr[arguments[i]]) {
                     if (Array.isArray(arr[arguments[i]])) {
-                        arr[arguments[i]].push(e);
+                        var t = typeof arguments[i] == 'string' ? arguments[i] : 'div';
+                        arr[t].push(e);
                     } else {
-                        arr[arguments[i]] = [arr[arguments[i]]];
+                        const t = arr[arguments[i]];
+                        arr[arguments[i]] = [];
+                        arr[arguments[i]].push(t);
+                        arr[arguments[i]].push(e);
                     }
                 } else {
                     arr[arguments[i]] = e;
@@ -82,7 +86,7 @@ const ndom = function (t, l) {
             return null;
         }
     } else {
-        return t ? createElement(t) : ndom("div");
+        return t ? createElement(t) : createElement("div");
     }
 }
 const ntn = (t) => {
@@ -587,6 +591,60 @@ const cyc = {};
         /*
         * Other
         */
+        waitComponent(c, p) {
+            ndomVersion = 2;
+            if (!c) {
+                c = '#fff';
+            }
+            if (!p) {
+                console.error('The parent is not valid');
+            } else {
+                const b = p.innerHTML;
+                console.log(b);
+                const e = ndom('div', 'div', 'svg', 'circle');
+                const d = { h: p.clientHeight, w: p.offsetWidth, w2: p.offsetWidth };
+                if (d.h > d.w) {
+                    d.h = d.w;
+                } else {
+                    d.w = d.h;
+                }
+                if (d.h * 0.6 < 45) {
+                    d.h = 45;
+                    d.w = 45;
+                }
+                e.div[0].setAttribute('class', 'wait-component-div-p'),
+                    e.div[0].setAttribute('style', 'width:' + (d.w * 0.6) + 'px;height:' + (d.w * 0.6) + 'px'),
+                    e.div[1].setAttribute('style', 'width:' + (d.w * 0.6) + 'px;height:' + (d.w * 0.6) + 'px'),
+                    e.div[1].setAttribute('class', 'wait-component-div-ch'),
+                    e.svg.setAttribute('class', 'wait-main'),
+                    e.svg.setAttribute('style', 'margin-top:0'),
+                    e.svg.setAttribute('width', (d.w * 0.6)),
+                    e.svg.setAttribute('height', (d.h * 0.6)),
+                    e.svg.setAttribute('viewBox', '0 0 44 44'),
+                    e.circle.setAttribute('class', 'wait-progress'),
+                    e.circle.setAttribute('cx', '22'),
+                    e.circle.setAttribute('cy', '22'),
+                    e.circle.setAttribute('r', '20'),
+                    e.circle.setAttribute('fill', 'none'),
+                    e.circle.setAttribute('style', 'stroke:' + c),
+                    e.circle.setAttribute('stroke-width', '4'),
+                    e.svg.appendChild(e.circle),
+                    e.div[1].appendChild(e.svg),
+                    e.div[0].appendChild(e.div[1]),
+                    p.innerHTML = '',
+                    p.setAttribute('style', 'width:' + d.w2 + 'px'),
+                    p.disabled = true,
+                    p.appendChild(e.div[0]);
+                ndomVersion = 1;
+                return {
+                    data: b,
+                    rm: () => {
+                        p.innerHTML = b, p.disabled = false
+                        // p.appendChild(b[i]);
+                    }
+                }
+            }
+        }
         vld() {
             var data;
             var arr = [];
